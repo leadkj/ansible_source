@@ -1,0 +1,32 @@
+- name: yum install
+  yum: name="{{ nginx_package }}" state=latest
+  with_items: "{{ nginx_package }}"
+
+- name: judge a user is exits
+  shell: grep ^nginx /etc/passwd
+  ignore_errors: True
+  register: resultuser
+
+- name: judge a file or dir is exits
+  shell: grep ^nginx /etc/passwd
+  ignore_errors: True
+  register: resultpath
+
+- name: user nginx
+  shell: useradd -M -s /sbin/nologin nginx
+  when: not resultuser
+
+- name: wwwroot
+  shell: mkdir -p "{{ wwwroot }}"
+  when: not resultpath
+
+- name: package
+  copy: src="{{ nginxsoft }}" dest=/usr/src
+
+- name: install nginx
+  shell: cd /usr/src ;tar xf {{ nginxsoft }} -C /usr/src; cd /usr/src/{{ nginxfolder }}; ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx --with-http_ssl_module --with-http_flv_module --with-http_stub_status_module --with-http_gzip_static_module --with-pcre && make && make install
+
+- name: copy conf file
+  template: src=nginx.conf dest=/usr/local/nginx/conf/nginx.conf
+  notify:
+    - start nginx

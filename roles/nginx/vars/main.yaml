@@ -1,0 +1,12 @@
+wwwroot: "/var/www/html"
+nginxsoft: "nginx-1.16.1.tar.gz"
+nginxfolder: "nginx-1.16.1"
+nginxport: "80"
+server_name: "www.ansible.com"
+nginx_package:
+  - openssl-devel
+  - pcre-devel
+  - zlib-devel
+  - gcc
+  - gcc-c++
+  - make
