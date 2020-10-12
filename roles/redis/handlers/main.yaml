@@ -1,0 +1,2 @@
+- name: start redis
+  raw: redis-server /etc/redis.conf

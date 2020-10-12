@@ -1,0 +1,15 @@
+- name: yum install
+  yum: name="{{ redis_package }}" state=latest
+  with_items: "{{ redis_package }}"
+
+
+- name: package
+  copy: src="{{ redissoft }}" dest=/usr/src
+
+- name: install redis
+  shell: cd /usr/src ;tar xf {{ redissoft }}; cd /usr/src/{{ redisfolder }}; make MALLOC=libc;cd src/;make install
+
+- name: copy conf file
+  template: src=redis.conf dest=/etc/redis.conf
+  notify:
+    - start redis
